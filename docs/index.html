@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analisador OFX</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="workbench" aria-labelledby="app-title">
+      <div class="upload-pane">
+        <p class="eyebrow">GitHub Pages + Pyodide</p>
+        <h1 id="app-title">Analisador OFX</h1>
+        <p class="lead">Converta um extrato OFX em CSV, Excel classificado e relatorio HTML mensal direto no navegador.</p>
+
+        <form id="ofx-form" class="dropzone">
+          <input id="ofx-file" type="file" accept=".ofx,application/x-ofx,text/plain" required>
+          <label for="ofx-file">
+            <span class="drop-title">Solte o OFX aqui</span>
+            <span id="file-label" class="drop-subtitle">ou selecione um arquivo</span>
+          </label>
+          <button id="process-button" type="submit" disabled>Processar</button>
+        </form>
+      </div>
+
+      <aside class="status-pane" aria-live="polite">
+        <div class="status-header">
+          <span id="status-dot" class="status-dot idle"></span>
+          <strong id="status-title">Aguardando arquivo</strong>
+        </div>
+        <p id="status-message">Os arquivos bancarios ficam no seu navegador durante o processamento.</p>
+
+        <div id="summary" class="summary" hidden></div>
+        <div id="downloads" class="downloads" hidden></div>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

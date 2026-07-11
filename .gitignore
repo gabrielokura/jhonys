@@ -9,6 +9,10 @@ web_runs/
 !classification_rules.csv
 !classification_rules_completed.csv
 
+# HTMLs estaticos publicados no GitHub Pages
+!index.html
+!docs/index.html
+
 # Caches locais
 __pycache__/
 *.py[cod]

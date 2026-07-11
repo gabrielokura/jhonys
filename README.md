@@ -60,6 +60,8 @@ Para publicar no GitHub Pages com GitHub Actions:
 3. Em `Build and deployment`, selecione `GitHub Actions` como fonte.
 4. O workflow `Deploy GitHub Pages` publicara a pasta `docs/` automaticamente a cada push.
 
+Se o Pages estiver configurado para publicar a raiz da branch em vez do Actions, o `index.html` da raiz redireciona automaticamente para `docs/`.
+
 ## Regras de classificacao
 
 As regras ficam em:
