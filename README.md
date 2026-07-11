@@ -37,6 +37,24 @@ O app salva cada upload em uma sessao temporaria isolada e os arquivos expiram a
 python -B ofx_web_app.py --ttl-minutes 60
 ```
 
+## Versao GitHub Pages
+
+A pasta `docs/` contem uma versao estatica para GitHub Pages. Ela usa Pyodide para rodar os mesmos scripts Python no navegador, sem enviar o OFX para um servidor.
+
+Para testar localmente:
+
+```powershell
+python -m http.server 8000 --directory docs
+```
+
+Abra:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Para publicar no GitHub Pages, configure o repositorio em `Settings > Pages` usando a branch `main` e a pasta `/docs`.
+
 ## Regras de classificacao
 
 As regras ficam em:

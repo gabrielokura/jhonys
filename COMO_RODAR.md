@@ -59,6 +59,24 @@ Para rodar em outra maquina, copie estes arquivos para a mesma pasta e rode o co
 - `build_monthly_html_report.py`
 - `classification_rules_completed.csv` ou `classification_rules.csv`
 
+## Modo GitHub Pages: processar no navegador com Pyodide
+
+A pasta `docs/` contem uma versao estatica que pode ser publicada no GitHub Pages. Ela carrega Pyodide pelo CDN e executa os scripts Python dentro do navegador.
+
+Teste local:
+
+```powershell
+python -m http.server 8000 --directory docs
+```
+
+Abra:
+
+```text
+http://127.0.0.1:8000/
+```
+
+No GitHub, publique em `Settings > Pages` selecionando a branch `main` e a pasta `/docs`.
+
 ## Modo manual: Etapa 1, converter OFX para CSV
 
 ```powershell
