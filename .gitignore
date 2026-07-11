@@ -1,0 +1,24 @@
+# Dados bancarios e saidas geradas
+*.ofx
+*.csv
+*.xlsx
+*.html
+web_runs/
+
+# CSVs de regras fazem parte do processador
+!classification_rules.csv
+!classification_rules_completed.csv
+
+# Caches locais
+__pycache__/
+*.py[cod]
+
+# Arquivos temporarios do Excel/Windows
+~$*
+Thumbs.db
+.DS_Store
+
+# Ambientes locais
+.venv/
+venv/
+env/
