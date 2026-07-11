@@ -23,6 +23,7 @@ REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 PACKAGE_REL_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 
 DEFAULT_SHEET_NAME = "extrato_classificado"
+DETAIL_ROWS_PER_PAGE = 20
 
 
 @dataclass
@@ -516,12 +517,26 @@ def render_detail_table(rows: list[dict[str, str]], columns: list[str]) -> str:
         )
         body_rows.append(f"<tr>{cells}</tr>")
 
+    pagination = ""
+    if len(rows) > DETAIL_ROWS_PER_PAGE:
+        pages = (len(rows) + DETAIL_ROWS_PER_PAGE - 1) // DETAIL_ROWS_PER_PAGE
+        pagination = (
+            '<div class="table-pagination">'
+            '<button type="button" class="pagination-prev">Anterior</button>'
+            f'<span class="pagination-status">Página 1 de {pages}</span>'
+            '<button type="button" class="pagination-next">Próxima</button>'
+            "</div>"
+        )
+
     return (
+        f'<div class="detail-table-shell" data-page-size="{DETAIL_ROWS_PER_PAGE}">'
         '<div class="detail-table-wrapper">'
         '<table class="detail-table">'
         f"<thead><tr>{header_cells}</tr></thead>"
         f"<tbody>{''.join(body_rows)}</tbody>"
         "</table>"
+        "</div>"
+        f"{pagination}"
         "</div>"
     )
 
@@ -774,6 +789,10 @@ def render_html_report(
       font-size: 14px;
       color: var(--muted);
     }}
+    .detail-table-shell {{
+      display: grid;
+      gap: 10px;
+    }}
     .detail-table-wrapper {{
       overflow-x: auto;
       border: 1px solid var(--line);
@@ -791,6 +810,28 @@ def render_html_report(
     }}
     .detail-table td {{
       white-space: nowrap;
+    }}
+    .table-pagination {{
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }}
+    .table-pagination button {{
+      border: 1px solid #9fb3c8;
+      background: #ffffff;
+      color: #1f4e79;
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }}
+    .table-pagination button:disabled {{
+      cursor: not-allowed;
+      opacity: 0.55;
     }}
     table {{
       width: 100%;
@@ -826,6 +867,7 @@ def render_html_report(
       .balance-grid {{ grid-template-columns: 1fr; }}
       .section-heading {{ flex-direction: column; }}
       .toggle-details {{ margin-top: 0; }}
+      .table-pagination {{ justify-content: flex-start; flex-wrap: wrap; }}
       table {{ font-size: 13px; }}
       th, td {{ padding: 9px 8px; }}
     }}
@@ -862,6 +904,43 @@ def render_html_report(
           button.textContent = 'Ver mais';
         }}
       }});
+    }});
+    document.querySelectorAll('.detail-table-shell').forEach((shell) => {{
+      const rows = Array.from(shell.querySelectorAll('tbody tr'));
+      const pagination = shell.querySelector('.table-pagination');
+      if (!pagination || rows.length <= Number(shell.dataset.pageSize || 20)) return;
+
+      const pageSize = Number(shell.dataset.pageSize || 20);
+      const totalPages = Math.ceil(rows.length / pageSize);
+      const prev = pagination.querySelector('.pagination-prev');
+      const next = pagination.querySelector('.pagination-next');
+      const status = pagination.querySelector('.pagination-status');
+      let currentPage = 1;
+
+      const renderPage = () => {{
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        rows.forEach((row, index) => {{
+          row.hidden = index < start || index >= end;
+        }});
+        status.textContent = `Página ${{currentPage}} de ${{totalPages}}`;
+        prev.disabled = currentPage === 1;
+        next.disabled = currentPage === totalPages;
+      }};
+
+      prev.addEventListener('click', () => {{
+        if (currentPage > 1) {{
+          currentPage -= 1;
+          renderPage();
+        }}
+      }});
+      next.addEventListener('click', () => {{
+        if (currentPage < totalPages) {{
+          currentPage += 1;
+          renderPage();
+        }}
+      }});
+      renderPage();
     }});
   </script>
 </body>

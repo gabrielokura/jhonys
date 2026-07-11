@@ -9,6 +9,7 @@ from build_monthly_html_report import (
     analyze_balance,
     grouped_monthly_totals,
     read_sheet_rows,
+    render_detail_table,
     render_html_report,
 )
 from classify_transactions import classify_transactions_file
@@ -129,6 +130,24 @@ class PublicRulesTest(unittest.TestCase):
 
 
 class StaticSiteTest(unittest.TestCase):
+    def test_detail_tables_paginate_after_twenty_rows(self) -> None:
+        rows = [
+            {
+                "data": f"01/01/2026",
+                "descricao": f"linha {index}",
+                "valor": "1,00",
+            }
+            for index in range(21)
+        ]
+
+        paginated = render_detail_table(rows, ["data", "descricao", "valor"])
+        self.assertIn('class="table-pagination"', paginated)
+        self.assertIn("Página 1 de 2", paginated)
+        self.assertIn('data-page-size="20"', paginated)
+
+        short_table = render_detail_table(rows[:20], ["data", "descricao", "valor"])
+        self.assertNotIn('class="table-pagination"', short_table)
+
     def test_pages_entrypoints_and_python_copies_exist(self) -> None:
         root_index = (ROOT / "index.html").read_text(encoding="utf-8")
         docs_index = (ROOT / "docs/index.html").read_text(encoding="utf-8")
