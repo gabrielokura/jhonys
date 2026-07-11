@@ -6,7 +6,11 @@ on:
       - main
     paths:
       - docs/**
+      - tests/**
+      - "*.py"
+      - "*.csv"
       - .github/workflows/deploy-pages.yml
+      - .github/actions/run-tests/**
   workflow_dispatch:
 
 permissions:
@@ -19,8 +23,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Run tests
+        uses: ./.github/actions/run-tests
+
   deploy:
     runs-on: ubuntu-latest
+    needs: test
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

@@ -1,0 +1,25 @@
+name: Run project tests
+description: Run syntax checks and the OFX analyzer regression suite.
+
+runs:
+  using: composite
+  steps:
+    - name: Compile Python sources
+      shell: bash
+      run: |
+        python -m py_compile \
+          ofx_to_csv.py \
+          classify_transactions.py \
+          build_monthly_html_report.py \
+          ofx_web_app.py \
+          docs/python/ofx_to_csv.py \
+          docs/python/classify_transactions.py \
+          docs/python/build_monthly_html_report.py
+
+    - name: Check JavaScript syntax
+      shell: bash
+      run: node --check docs/app.js
+
+    - name: Run unit tests
+      shell: bash
+      run: python -m unittest discover -s tests -v
