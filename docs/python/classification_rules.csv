@@ -29,3 +29,5 @@ CRED.TRANSF.CONTAS INTERCREDIS;;Não;Recebimentos;Transferências;;Entrada;Regra
 DÉB.TRANSF.CONTAS DIF.TITULARIDADE;;Não;Transferências;Transferências enviadas;;Saida;Regra publica generica
 DÉB.TRANSF.CONTAS DIF.TIT. INTERCREDIS;;Não;Transferências;Transferências enviadas;;Saida;Regra publica generica
 COMPRA VISA ELECTRON;;Não;Compras;Cartão débito;;Saida;Regra publica generica
+CREDITO REEMBOLSO ALUGUEL SIPAG;;Não;Reembolso;Aluguel;;Entrada;Regra publica generica
+TAR. FORNEC. FOLHA CHEQUE TALÃO;;Não;Despesas;Tarifas bancárias;;Saida;Regra publica generica
