@@ -1,139 +1,31 @@
-memo;descricao;Precisa descriÁ„o;grupo;categoria;subcategoria;tipo_fluxo;observacao
-TRANSF.RECEBIDA - PIX SICOOB;REM.: JAQUELINE DIAS DE SOUZA Tr;;Despesas;Fornecedores;;Saida;Exemplo inicial informado pelo usuario
-PIX RECEBIDO - OUTRA IF;;N„o;PIX;Pix entrada;;;
-PIX EMITIDO OUTRA IF;;N„o;PIX;Pix saÌda;;;
-D…B.TIT.COMPE EFETIVADO;HYGIEL;Sim;Despesas;Fornecedores;;;
-CRED.TRANSF.CONTAS INTERCREDIS;REM.: PRISCILA MUNHOZ XAVIER DE;;Recebimento clientes;;;;
-D…B.TIT.COMPE EFETIVADO;Passes;;;;;;
-D…B.TIT.COMPE EFETIVADO;Paran· boy;;;;;;
-D…B.CONV.ORG√OS GOV.;BOMBEIROS;Sim;Despesas;ConvÍnios;;;
-D…B.CONV.ORG√OS GOV.;DIFAL;Sim;Despesas;ConvÍnios;;;
-D…B.TIT.COMPE EFETIVADO;AgrÌcola;;;;;;
-D…B.TIT.COMPE EFETIVADO;SHV g·s;;;;;;
-D…B.TIT.COMPE EFETIVADO;Tozzo;;;;;;
-CR COMPRAS VISA;Stone Pagament_Cred._Visa;Sim;Cart„o;CrÈdito Stone;;;
-CR COMPRAS MASTERCARD;Stone Pagament_Cred._Mastercard;Sim;Cart„o;CrÈdito Stone;;;
-CR COMPRAS MAESTRO;Stone Pagament_Deb._Maestro;Sim;Cart„o;DÈbito Stone;;;
-CR COMPRAS VISA ELECTRON;Stone Pagament_Deb._Visa Electro;Sim;Cart„o;DÈbito Stone;;;
-CR COMPRAS VISA;SIPAG_Cred._Visa;Sim;Cart„o;CrÈdito SIPAG;;;
-CR COMPRAS MASTERCARD;SIPAG_Cred._Mastercard;Sim;Cart„o;CrÈdito SIPAG;;;
-CR COMPRAS MAESTRO;SIPAG_Deb._Maestro;Sim;Cart„o;DÈbito SIPAG;;;
-CR COMPRAS VISA ELECTRON;SIPAG_Deb._Visa Electron;Sim;Cart„o;DÈbito SIPAG;;;
-TRANSF.REALIZADA PIX SICOOB;;N„o;PIX;Pix saÌda;;;
-TRANSF.RECEBIDA - PIX SICOOB;;N„o;PIX;Pix entrada;;;
-;;;;;;;
-CREDITO REEMBOLSO ALUGUEL SIPAG;CREDITO REEMBOLSO ALUGUEL SIPAG;Sim;Reembolso;;;;
-CR COMPRAS DEB OUTRAS BANDEIRAS;Stone Pagament_Deb._Elo DÈbito;Sim;Cart„o;DÈbito SIPAG;;;
-CR COMPRAS CRE OUTRAS BANDEIRAS;SIPAG_Cred._American Expre;Sim;Cart„o;CrÈdito SIPAG;;;
-D…B.CONV.TELECOMUNICA«’ES;D…B.CONV.TELECOMUNICA«’ES;Sim;Despesas;ConvÍnios;;;
-D…B.TIT.COMPE EFETIVADO;COAMO;;;;;;
-D…B.TIT.COMPE EFETIVADO;SICTELL;;;;;;
-CHEQUE PAGO CAIXA;CHEQUE PAGO CAIXA;;Cheque;;;;Para todo cheque, deve ser puxado o n˙mero do cheque
-CR…D.TED-STR;IFOOD.COM AGENCIA DE RESTAURANTE;;Ifood;;;;
-CR COMPRAS MASTERCARD;IFOOD_Cred._Mastercard;Sim;Ifood;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;FAST;Sim;Despesas;Fornecedores;;;
-D…B. CONV. SEGUROS;D…B. CONV. SEGUROS;Sim;Despesas;ConvÍnios;;;
-TAR. FORNEC. FOLHA CHEQUE TAL√O;TAR. FORNEC. FOLHA CHEQUE TAL√O;Sim;;;;;
-D…B.TIT.COMPE EFETIVADO;TUICIAL;;;;;;
-CHEQUE COMPE INTEGRADA;CHEQUE COMPE INTEGRADA;;Cheque;;;;Para todo cheque, deve ser puxado o n˙mero do cheque
-PIX RECEBIDO - OUTRA IF - MESMA TIT.;;;;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;FUNDO PROMO«√O;Sim;Despesas;Fornecedores;;;
-D…B.TIT.COMPE EFETIVADO;Paran· boi;;;;;;
-D…B.CONV.TRIBUTOS FEDERAIS - RFB;SIMPLES;Sim;Despesas;ConvÍnio;;;
-D…B.TRANSF.CONTAS DIF.TITULARIDADE;FAV.: NEIDE MARTINS FRANZEN;Sim;Pagamentos colaboradores;;;;
-D…B.TRANSF.CONTAS DIF.TITULARIDADE;FAV.: CLEITON ERNANI LISBINSKI;;;;;;
-D…B.TRANSF.CONTAS DIF.TITULARIDADE;FAV.: CLAIRTON LISBINSKI;;;;;;
-D…B.TÕTULO COBRAN«A;Shopping;;Despesas;Fornecedores;;;
-D…B.TIT.COMPE EFETIVADO;G·s;N„o;PIX;Pix entrada;;;
-D…B.CONV.TRIBUTOS FEDERAIS - RFB;GPS;;;;;;
-D…B.TIT.COMPE EFETIVADO;ASTRA;;;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;PremiaÁ„o;;;;;;
-D…B.TIT.COMPE EFETIVADO;COPINI;;;;;;
-D…B.TIT.COMPE EFETIVADO;FNS;;;;;;
-D…B.TIT.COMPE EFETIVADO;PLUSVAL;;;;;;
-APLICA«√O RDC;APLICA«√O RDC;;Investimento;;;;
-D…B.TRANSF.CONTAS DIF.TITULARIDADE;FAV.: FRANCIELMA DE SOUZA RIBEIR;;;;;;
-D…B.TRANSF.CONTAS DIF.TITULARIDADE;FAV.: CLEBER DANIEL MACHADO MONT;;;;;;
-D…BITO PAGAMENTO AGENDADO GPS;D…BITO PAGAMENTO AGENDADO GPS;Sim;Despesas;ConvÍnio;;;
-CR COMPRAS CRE OUTRAS BANDEIRAS;SIPAG_Cred._Elo;Sim;Cart„o;CrÈdito SIPAG;;;
-D…B.TIT.COMPE EFETIVADO;ECAD;Sim;;;;;
-D…B.TIT.COMPE EFETIVADO;Difal;Sim;;;;;
-COMPRA VISA ELECTRON;PARIGOT TOLEDO BR;Sim;Compra;Cart„o dÈbito;;;
-D…B.TIT.COMPE EFETIVADO;Supergas;;;;;;
-D…B.TIT.COMPE EFETIVADO;OESA;;;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;2 via card prÍmio J˙lio;;;;;;
-D…B.CONV.EN.EL…TRICA E G¡S;COPEL;Sim;Despesas;ConvÍnio;;;
-D…B.TIT.COMPE EFETIVADO;SICTEL;;;;;;
-D…B.TIT.COMPE EFETIVADO;RENATA;;;;;;
-D…B.TIT.COMPE EFETIVADO;C…SAR;;;;;;
-D…B.TIT.COMPE EFETIVADO;LINE;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;ACIT;;;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;PROAGIR;;;;;;
-D…B.TIT.COMPE EFETIVADO;FOMENTO;;;;;;
-D…B.TIT.COMPE EFETIVADO;ATM;;;;;;
-D…B.TIT.COMPE EFETIVADO;HUMANA SAUDE;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;JUNSOFT;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;INAB;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;QUIMITOL;;;;;;
-COMPRA VISA ELECTRON;PASIANOT ZANATTO LTDA TOLEDO BR;;Compra;Cart„o dÈbito;;;
-PGTOS - CHEQUE PR”PRIA COOP/AG;PGTOS - CHEQUE PR”PRIA COOP/AG;;;;;;
-D…B.TRANSF.CONTAS DIF.TITULARIDADE;FAV.: PASIANOT ZANATTO LTDA;;;;;;
-D…B.TIT.COMPE EFETIVADO;Polina;;;;;;
-CR COMPRAS CRE OUTRAS BANDEIRAS;Credenciador C_Cred._CABAL PRE;Sim;Cart„o;CrÈdito CABAL;;;
-CR COMPRAS DEB OUTRAS BANDEIRAS;SIPAG_Deb._Elo DÈbito;Sim;Cart„o;DÈbito SIPAG;;;
-COMPRA VISA ELECTRON;MAX TOLEDO CAMBE BR;Sim;;;;;
-CRED.TRANSF.CONTAS INTERCREDIS;REM.: LUIZ FELIPE AMARAL CAMPANA;Sim;Recebimento clientes;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;Bolcartdy;Sim;;;;;
-D…B.TIT.COMPE EFETIVADO;SOS;;;;;;
-D…B. PAGAMENTO DE BOLETO INTERCREDIS;Vale alimentaÁ„o;;;;;;
-D…B.TIT.COMPE EFETIVADO;DON GIUSEPPE;;;;;;
-D…B.TIT.COMPE EFETIVADO;HALTON;;;;;;
-D…B.TIT.COMPE EFETIVADO;VIABILIZE;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;AZZ AgÍncia;Sim;Despesas;Fornecedores;;;
-D…B.TIT.COMPE EFETIVADO;Gas;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;Fundo Reserva;;;;;;
-CRED.TRANSF.CONTAS INTERCREDIS;REM.: MAYKON SANTIAGO ALMEIDA PO;;Recebimento clientes;;;;
-D…B.TRANSF.CONTAS DIF.TIT. INTERCREDIS;FAV.: SICOOB INSTITUICAO DE PAGA;;;;;;
-D…B.CONV.ORG√OS GOV.;DIFAL IMPOSTO;;;;;;
-D…B.TIT.COMPE EFETIVADO;Dalia;;;;;;
-D…B.TIT. COBRAN«A EFETIVADO;Bolatlpiscpartdi;;;;;;
-D…B.CONV.SANEAMENTO;D…B.CONV.SANEAMENTO;Sim;Despesas;ConvÍnio;;;
-CRED.TRANSF.CONTAS INTERCREDIS;REM.: MATEUS BORGES DA SILVA Tra;;Recebimento clientes;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
-;;;;;;;
+Ôªømemo;descricao;Precisa descri√ß√£o;grupo;categoria;subcategoria;tipo_fluxo;observacao
+PIX RECEBIDO - OUTRA IF;;N√£o;PIX;Pix entrada;;Entrada;Regra publica generica
+TRANSF.RECEBIDA - PIX SICOOB;;N√£o;PIX;Pix entrada;;Entrada;Regra publica generica
+PIX EMITIDO OUTRA IF;;N√£o;PIX;Pix sa√≠da;;Saida;Regra publica generica
+TRANSF.REALIZADA PIX SICOOB;;N√£o;PIX;Pix sa√≠da;;Saida;Regra publica generica
+CR COMPRAS VISA;;N√£o;Cart√£o;Cr√©dito;;Entrada;Regra publica generica
+CR COMPRAS MASTERCARD;;N√£o;Cart√£o;Cr√©dito;;Entrada;Regra publica generica
+CR COMPRAS CRE OUTRAS BANDEIRAS;;N√£o;Cart√£o;Cr√©dito;;Entrada;Regra publica generica
+CR COMPRAS MAESTRO;;N√£o;Cart√£o;D√©bito;;Entrada;Regra publica generica
+CR COMPRAS VISA ELECTRON;;N√£o;Cart√£o;D√©bito;;Entrada;Regra publica generica
+CR COMPRAS DEB OUTRAS BANDEIRAS;;N√£o;Cart√£o;D√©bito;;Entrada;Regra publica generica
+CHEQUE PAGO CAIXA;;N√£o;Cheque;Cheque;;Saida;Regra publica generica
+CHEQUE COMPE INTEGRADA;;N√£o;Cheque;Cheque;;Saida;Regra publica generica
+PGTOS - CHEQUE PR√ìPRIA COOP/AG;;N√£o;Cheque;Cheque;;Saida;Regra publica generica
+D√âB.TIT.COMPE EFETIVADO;;N√£o;Despesas;Fornecedores;;Saida;Regra publica generica
+D√âB.T√çTULO COBRAN√áA;;N√£o;Despesas;Fornecedores;;Saida;Regra publica generica
+D√âB.TIT. COBRAN√áA EFETIVADO;;N√£o;Despesas;Fornecedores;;Saida;Regra publica generica
+D√âB. PAGAMENTO DE BOLETO INTERCREDIS;;N√£o;Despesas;Fornecedores;;Saida;Regra publica generica
+D√âB.CONV.ORG√ÉOS GOV.;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+D√âB.CONV.TRIBUTOS FEDERAIS - RFB;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+D√âB.CONV.TELECOMUNICA√á√ïES;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+D√âB.CONV.EN.EL√âTRICA E G√ÅS;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+D√âB.CONV.SANEAMENTO;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+D√âB. CONV. SEGUROS;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+D√âBITO PAGAMENTO AGENDADO GPS;;N√£o;Despesas;Conv√™nios;;Saida;Regra publica generica
+APLICA√á√ÉO RDC;;N√£o;Investimento;Aplica√ß√£o;;Saida;Regra publica generica
+CR√âD.TED-STR;;N√£o;Recebimentos;Transfer√™ncias;;Entrada;Regra publica generica
+CRED.TRANSF.CONTAS INTERCREDIS;;N√£o;Recebimentos;Transfer√™ncias;;Entrada;Regra publica generica
+D√âB.TRANSF.CONTAS DIF.TITULARIDADE;;N√£o;Transfer√™ncias;Transfer√™ncias enviadas;;Saida;Regra publica generica
+D√âB.TRANSF.CONTAS DIF.TIT. INTERCREDIS;;N√£o;Transfer√™ncias;Transfer√™ncias enviadas;;Saida;Regra publica generica
+COMPRA VISA ELECTRON;;N√£o;Compras;Cart√£o d√©bito;;Saida;Regra publica generica

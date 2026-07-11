@@ -38,6 +38,7 @@ SESSION_COOKIE = "ofx_session"
 SESSION_ID_RE = re.compile(r"^[A-Za-z0-9_-]{24,80}$")
 APP_CONFIG = {
     "ttl_seconds": 60 * 60,
+    "max_upload_bytes": 20 * 1024 * 1024,
 }
 
 
@@ -349,7 +350,7 @@ def home_page(session_id: str | None = None, message: str = "") -> bytes:
         <div class="panel">
           <h2>Ultima analise</h2>
           <p>Abra o HTML para ver o resumo mensal, a conferencia de saldo e os detalhes por grupo/categoria.</p>
-          {'<a class="button" href="/files/' + html.escape(outputs["html"]) + '" target="_blank">Abrir relatorio HTML</a>' if "html" in outputs else ''}
+          {'<a class="button" href="/files/' + html.escape(outputs["html"]) + '" target="_blank" rel="noopener">Abrir relatorio HTML</a>' if "html" in outputs else ''}
           {'<a class="button secondary" href="/files/' + html.escape(outputs["xlsx"]) + '">Baixar Excel classificado</a>' if "xlsx" in outputs else ''}
           <form method="post" action="/delete" style="margin-top: 12px;">
             <button class="danger" type="submit">Deletar informacoes e enviar outro arquivo</button>
@@ -386,7 +387,7 @@ def result_page(result: dict[str, object]) -> bytes:
         <h1>Analise gerada</h1>
         <p>Arquivo processado: {html.escape(str(result["original_name"]))}</p>
         <div class="panel">
-          <a class="button" href="/files/{html.escape(str(result["html"]))}" target="_blank">Abrir relatorio HTML</a>
+          <a class="button" href="/files/{html.escape(str(result["html"]))}" target="_blank" rel="noopener">Abrir relatorio HTML</a>
           <a class="button secondary" href="/files/{html.escape(str(result["xlsx"]))}">Baixar Excel classificado</a>
           <a class="button secondary" href="/files/{html.escape(str(result["pending"]))}">Baixar pendencias</a>
           <form method="post" action="/delete" style="margin-top: 12px;">
@@ -499,6 +500,8 @@ class OFXRequestHandler(BaseHTTPRequestHandler):
         if parsed.path == "/upload":
             try:
                 length = int(self.headers.get("Content-Length", "0"))
+                if length > int(APP_CONFIG["max_upload_bytes"]):
+                    raise ValueError("Arquivo muito grande. Envie um OFX de ate 20 MB.")
                 body = self.rfile.read(length)
                 file_name, payload = parse_upload(self.headers, body)
                 if not payload:

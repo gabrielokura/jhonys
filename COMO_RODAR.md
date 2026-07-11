@@ -84,6 +84,8 @@ No GitHub, publique com Actions:
 
 Se o Pages estiver configurado para publicar a raiz da branch em vez do Actions, o `index.html` da raiz redireciona automaticamente para `docs/`.
 
+Importante: todo arquivo dentro de `docs/` fica publico no GitHub Pages. Antes de publicar, mantenha as regras de classificacao sem nomes de pessoas, CPF/CNPJ, chaves PIX, dados bancarios, emails ou telefones.
+
 ## Modo manual: Etapa 1, converter OFX para CSV
 
 ```powershell

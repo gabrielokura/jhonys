@@ -10,6 +10,7 @@ const PYTHON_BINARY_FILES = [
   "classification_rules_completed.csv",
   "classification_rules.csv",
 ];
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024;
 
 const form = document.querySelector("#ofx-form");
 const fileInput = document.querySelector("#ofx-file");
@@ -20,8 +21,10 @@ const statusTitle = document.querySelector("#status-title");
 const statusMessage = document.querySelector("#status-message");
 const summary = document.querySelector("#summary");
 const downloads = document.querySelector("#downloads");
+const clearButton = document.querySelector("#clear-button");
 
 let pyodideReadyPromise = null;
+let pyodideInstance = null;
 let objectUrls = [];
 
 function setStatus(kind, title, message) {
@@ -39,6 +42,7 @@ function clearOutputs() {
   summary.innerHTML = "";
   downloads.hidden = true;
   downloads.innerHTML = "";
+  clearButton.hidden = true;
 }
 
 function loadPyodideScript() {
@@ -70,6 +74,7 @@ async function preparePyodide() {
       setStatus("loading", "Carregando Python", "Baixando o runtime Pyodide. Na primeira vez, isso pode levar alguns segundos.");
       await loadPyodideScript();
       const pyodide = await globalThis.loadPyodide({ indexURL: PYODIDE_INDEX_URL });
+      pyodideInstance = pyodide;
 
       setStatus("loading", "Preparando conversor", "Montando os modulos Python e as regras de classificacao no navegador.");
       pyodide.FS.mkdirTree("/work/python");
@@ -236,6 +241,29 @@ function renderDownloads(pyodide, result) {
     })
     .join("");
   downloads.hidden = false;
+  clearButton.hidden = false;
+}
+
+function clearBrowserData() {
+  clearOutputs();
+  if (pyodideInstance) {
+    pyodideInstance.runPython(`
+from pathlib import Path
+import shutil
+
+upload_path = Path("/work/upload.ofx")
+run_root = Path("/work/runs")
+if upload_path.exists():
+    upload_path.unlink()
+if run_root.exists():
+    shutil.rmtree(run_root)
+run_root.mkdir(parents=True, exist_ok=True)
+`);
+  }
+  fileInput.value = "";
+  fileLabel.textContent = "ou selecione um arquivo";
+  processButton.disabled = true;
+  setStatus("idle", "Dados limpos", "O arquivo OFX e os resultados foram removidos desta aba.");
 }
 
 function renderSummary(result) {
@@ -251,6 +279,11 @@ function renderSummary(result) {
 }
 
 async function processFile(file) {
+  if (file.size > MAX_UPLOAD_BYTES) {
+    setStatus("error", "Arquivo muito grande", "Envie um arquivo OFX de ate 20 MB.");
+    return;
+  }
+
   clearOutputs();
   setStatus("loading", "Processando", "Lendo o OFX e preparando os arquivos de saida.");
   processButton.disabled = true;
@@ -283,8 +316,13 @@ async function processFile(file) {
 fileInput.addEventListener("change", () => {
   clearOutputs();
   const file = fileInput.files[0];
-  processButton.disabled = !file;
   fileLabel.textContent = file ? file.name : "ou selecione um arquivo";
+  if (file && file.size > MAX_UPLOAD_BYTES) {
+    processButton.disabled = true;
+    setStatus("error", "Arquivo muito grande", "Envie um arquivo OFX de ate 20 MB.");
+    return;
+  }
+  processButton.disabled = !file;
   setStatus("idle", file ? "Arquivo selecionado" : "Aguardando arquivo", file ? "Pronto para processar." : "Os arquivos bancarios ficam no seu navegador durante o processamento.");
 });
 
@@ -319,3 +357,5 @@ form.addEventListener("submit", async (event) => {
   }
   await processFile(file);
 });
+
+clearButton.addEventListener("click", clearBrowserData);

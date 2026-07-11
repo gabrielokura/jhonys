@@ -225,6 +225,19 @@ button:disabled {
   margin-top: 22px;
 }
 
+.clear-button {
+  width: 100%;
+  margin-top: 12px;
+  border-color: #b8c1cf;
+  background: white;
+  color: var(--danger);
+}
+
+.clear-button:hover {
+  border-color: var(--danger);
+  background: #fff5f5;
+}
+
 .download-link.secondary {
   background: white;
   color: var(--blue);
