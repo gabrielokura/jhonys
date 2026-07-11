@@ -194,17 +194,44 @@ function renderMetric(label, value) {
 
 function renderDownloads(pyodide, result) {
   const outputs = [
-    ["Relatorio HTML", result.html, "text/html;charset=utf-8", false],
-    ["Excel classificado", result.xlsx, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", true],
-    ["CSV bruto", result.csv, "text/csv;charset=utf-8", true],
-    ["CSV pendencias", result.pending, "text/csv;charset=utf-8", true],
+    {
+      label: "Relatorio HTML",
+      filePath: result.html,
+      type: "text/html;charset=utf-8",
+      secondary: false,
+      openInNewTab: true,
+    },
+    {
+      label: "Excel classificado",
+      filePath: result.xlsx,
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      secondary: true,
+      openInNewTab: false,
+    },
+    {
+      label: "CSV bruto",
+      filePath: result.csv,
+      type: "text/csv;charset=utf-8",
+      secondary: true,
+      openInNewTab: false,
+    },
+    {
+      label: "CSV pendencias",
+      filePath: result.pending,
+      type: "text/csv;charset=utf-8",
+      secondary: true,
+      openInNewTab: false,
+    },
   ];
 
   downloads.innerHTML = outputs
-    .map(([label, filePath, type, secondary]) => {
+    .map(({ label, filePath, type, secondary, openInNewTab }) => {
       const bytes = pyodide.FS.readFile(filePath);
       const url = blobUrl(bytes, type);
       const className = secondary ? "download-link secondary" : "download-link";
+      if (openInNewTab) {
+        return `<a class="${className}" href="${url}" target="_blank" rel="noopener">${label}</a>`;
+      }
       return `<a class="${className}" href="${url}" download="${downloadName(filePath)}">${label}</a>`;
     })
     .join("");
