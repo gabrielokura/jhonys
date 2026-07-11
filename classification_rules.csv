@@ -9,9 +9,11 @@ CR COMPRAS CRE OUTRAS BANDEIRAS;;Não;Cartão;Crédito;;Entrada;Regra publica ge
 CR COMPRAS MAESTRO;;Não;Cartão;Débito;;Entrada;Regra publica generica
 CR COMPRAS VISA ELECTRON;;Não;Cartão;Débito;;Entrada;Regra publica generica
 CR COMPRAS DEB OUTRAS BANDEIRAS;;Não;Cartão;Débito;;Entrada;Regra publica generica
+CR COMPRAS CABAL DÉBITO;;Não;Cartão;Cabal Débito;;Entrada;Regra publica generica
 CHEQUE PAGO CAIXA;;Não;Cheque;Cheque;;Saida;Regra publica generica
 CHEQUE COMPE INTEGRADA;;Não;Cheque;Cheque;;Saida;Regra publica generica
 PGTOS - CHEQUE PRÓPRIA COOP/AG;;Não;Cheque;Cheque;;Saida;Regra publica generica
+CHQ COOP/AG.DEP.EM CONTA;;Não;Cheque;Cheque;;Saida;Regra publica generica
 DÉB.TIT.COMPE EFETIVADO;;Não;Despesas;Fornecedores;;Saida;Regra publica generica
 DÉB.TÍTULO COBRANÇA;;Não;Despesas;Fornecedores;;Saida;Regra publica generica
 DÉB.TIT. COBRANÇA EFETIVADO;;Não;Despesas;Fornecedores;;Saida;Regra publica generica
@@ -26,6 +28,7 @@ DÉBITO PAGAMENTO AGENDADO GPS;;Não;Despesas;Convênios;;Saida;Regra publica ge
 APLICAÇÃO RDC;;Não;Investimento;Aplicação;;Saida;Regra publica generica
 CRÉD.TED-STR;;Não;Recebimentos;Transferências;;Entrada;Regra publica generica
 CRED.TRANSF.CONTAS INTERCREDIS;;Não;Recebimentos;Transferências;;Entrada;Regra publica generica
+CRÉD.TRANSF.POUPANÇA INTERCREDIS;;Não;Recebimentos;Transferências;;Entrada;Regra publica generica
 DÉB.TRANSF.CONTAS DIF.TITULARIDADE;;Não;Transferências;Transferências enviadas;;Saida;Regra publica generica
 DÉB.TRANSF.CONTAS DIF.TIT. INTERCREDIS;;Não;Transferências;Transferências enviadas;;Saida;Regra publica generica
 COMPRA VISA ELECTRON;;Não;Compras;Cartão débito;;Saida;Regra publica generica
