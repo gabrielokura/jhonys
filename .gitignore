@@ -3,6 +3,7 @@
 *.csv
 *.xlsx
 *.html
+*.json
 web_runs/
 
 # CSVs de regras fazem parte do processador
@@ -12,6 +13,7 @@ web_runs/
 # HTMLs estaticos publicados no GitHub Pages
 !index.html
 !docs/index.html
+!docs/report-v2.html
 
 # Caches locais
 __pycache__/

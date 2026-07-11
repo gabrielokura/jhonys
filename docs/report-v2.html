@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' blob:; script-src 'self'; style-src 'self'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Relatório Interativo OFX</title>
+  <link rel="stylesheet" href="report-v2.css">
+  <script defer src="report-v2.js"></script>
+</head>
+<body>
+  <header class="report-header">
+    <div>
+      <p class="eyebrow">Relatório interativo</p>
+      <h1>Relatório OFX</h1>
+      <p id="report-source">Carregando dados...</p>
+    </div>
+    <a class="back-link" href="./">Processar outro OFX</a>
+  </header>
+
+  <main class="report-shell">
+    <section id="empty-state" class="empty-state" hidden>
+      <h2>Dados não encontrados</h2>
+      <p>Abra este relatório pelo botão “Abrir relatório interativo” após processar um OFX.</p>
+      <a href="./">Voltar ao analisador</a>
+    </section>
+
+    <section id="report-content" hidden>
+      <div id="metrics" class="metric-row"></div>
+      <section id="balance-section" class="panel"></section>
+      <section id="review-section" class="panel"></section>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div>
+            <h2>Grupos e categorias</h2>
+            <p id="group-count"></p>
+          </div>
+          <label class="search-control">
+            <span>Buscar</span>
+            <input id="group-search" type="search" placeholder="Grupo, categoria ou descrição">
+          </label>
+        </div>
+        <div id="groups"></div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

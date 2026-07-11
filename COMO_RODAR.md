@@ -33,6 +33,7 @@ Na pagina, arraste o arquivo `.ofx` para a area de upload. O app gera automatica
 - CSV bruto;
 - Excel classificado;
 - HTML mensal agrupado;
+- relatorio interativo v2;
 - CSV de pendencias, caso existam operacoes novas para avaliar.
 
 Os arquivos gerados ficam isolados por sessao do navegador. Os links de download so funcionam para a sessao que enviou o OFX.
@@ -85,6 +86,8 @@ No GitHub, publique com Actions:
 Se o Pages estiver configurado para publicar a raiz da branch em vez do Actions, o `index.html` da raiz redireciona automaticamente para `docs/`.
 
 Importante: todo arquivo dentro de `docs/` fica publico no GitHub Pages. Antes de publicar, mantenha as regras de classificacao sem nomes de pessoas, CPF/CNPJ, chaves PIX, dados bancarios, emails ou telefones.
+
+O botão `Abrir relatório interativo` usa `report-v2.html`, `report-v2.css` e `report-v2.js` para renderizar o JSON produzido por `build_monthly_report_v2.py`. O botão `Abrir HTML clássico` mantém o relatório antigo funcionando.
 
 ## Modo manual: Etapa 1, converter OFX para CSV
 
@@ -174,6 +177,16 @@ Isso gera um HTML com:
 - botao `Ver mais` em cada tabela para abrir as linhas completas daquele grupo/categoria.
 - conferencia de saldo com saldo inicial inferido, movimentacoes, saldo final OFX e diferencas.
 - movimentacoes novas sem regra lancadas como `Outros gastos > Avaliar` ou `Outras entradas > Avaliar`.
+
+## Modo manual: Etapa 4, gerar JSON do relatório v2
+
+Depois de gerar o Excel classificado, rode:
+
+```powershell
+python build_monthly_report_v2.py "C:\caminho\do\extrato_classificado.xlsx" --ofx "C:\caminho\do\extrato.ofx"
+```
+
+Isso gera um JSON com os dados do relatório interativo. O app web usa esse JSON como fonte para `report-v2.html`.
 
 Tambem e possivel escolher o caminho de saida:
 

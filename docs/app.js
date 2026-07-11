@@ -5,6 +5,7 @@ const PYTHON_TEXT_FILES = [
   "ofx_to_csv.py",
   "classify_transactions.py",
   "build_monthly_html_report.py",
+  "build_monthly_report_v2.py",
 ];
 const PYTHON_BINARY_FILES = [
   "classification_rules_completed.csv",
@@ -140,6 +141,7 @@ from build_monthly_html_report import (
     read_sheet_rows,
     render_html_report,
 )
+from build_monthly_report_v2 import build_report_data, report_data_to_json
 from classify_transactions import classify_transactions_file
 from ofx_to_csv import convert_ofx_to_csv
 
@@ -174,6 +176,7 @@ def process_browser_file(original_name):
     xlsx_path = RUN_ROOT / f"{stem}_classificado.xlsx"
     pending_path = RUN_ROOT / f"{stem}_operacoes_a_classificar.csv"
     html_path = RUN_ROOT / f"{stem}_relatorio_mensal.html"
+    json_v2_path = RUN_ROOT / f"{stem}_relatorio_mensal_v2.json"
 
     ofx_path.write_bytes(UPLOAD_PATH.read_bytes())
 
@@ -196,6 +199,8 @@ def process_browser_file(original_name):
     balance = analyze_balance(ofx_path, rows)
     html_report = render_html_report(xlsx_path, rows, grouped, balance)
     html_path.write_text(html_report, encoding="utf-8")
+    report_data = build_report_data(xlsx_path, rows, grouped, balance)
+    json_v2_path.write_text(report_data_to_json(report_data), encoding="utf-8")
 
     return {
         "original_name": original_name,
@@ -211,6 +216,7 @@ def process_browser_file(original_name):
         "xlsx": str(xlsx_path),
         "pending": str(actual_pending_path),
         "html": str(html_path),
+        "json_v2": str(json_v2_path),
     }
 `);
       return pyodide;
@@ -230,6 +236,20 @@ function downloadName(filePath) {
   return filePath.split("/").pop();
 }
 
+function reportV2Url(pyodide, filePath) {
+  const bytes = pyodide.FS.readFile(filePath);
+  const json = new TextDecoder("utf-8").decode(bytes);
+  const key = `ofx-report-v2-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  try {
+    localStorage.setItem(key, json);
+    return `report-v2.html?dataKey=${encodeURIComponent(key)}`;
+  } catch (error) {
+    console.warn("Nao foi possivel usar localStorage para o relatorio v2.", error);
+    const url = blobUrl(bytes, "application/json;charset=utf-8");
+    return `report-v2.html#data=${encodeURIComponent(url)}`;
+  }
+}
+
 function renderMetric(label, value) {
   return `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`;
 }
@@ -237,10 +257,18 @@ function renderMetric(label, value) {
 function renderDownloads(pyodide, result) {
   const outputs = [
     {
-      label: "Abrir relatório",
+      label: "Abrir relatório interativo",
+      filePath: result.json_v2,
+      type: "application/json;charset=utf-8",
+      secondary: false,
+      openInNewTab: true,
+      reportV2: true,
+    },
+    {
+      label: "Abrir HTML clássico",
       filePath: result.html,
       type: "text/html;charset=utf-8",
-      secondary: false,
+      secondary: true,
       openInNewTab: true,
     },
     {
@@ -267,9 +295,9 @@ function renderDownloads(pyodide, result) {
   ];
 
   downloads.innerHTML = outputs
-    .map(({ label, filePath, type, secondary, openInNewTab }) => {
-      const bytes = pyodide.FS.readFile(filePath);
-      const url = blobUrl(bytes, type);
+    .map(({ label, filePath, type, secondary, openInNewTab, reportV2 }) => {
+      const bytes = reportV2 ? null : pyodide.FS.readFile(filePath);
+      const url = reportV2 ? reportV2Url(pyodide, filePath) : blobUrl(bytes, type);
       const className = secondary ? "download-link secondary" : "download-link primary";
       if (openInNewTab) {
         return `<a class="${className}" href="${url}" target="_blank" rel="noopener">${label}</a>`;
@@ -283,6 +311,13 @@ function renderDownloads(pyodide, result) {
 
 function clearBrowserData() {
   clearOutputs();
+  try {
+    Object.keys(localStorage)
+      .filter((key) => key.startsWith("ofx-report-v2-"))
+      .forEach((key) => localStorage.removeItem(key));
+  } catch (error) {
+    console.warn("Nao foi possivel limpar o armazenamento do relatorio v2.", error);
+  }
   if (pyodideInstance) {
     pyodideInstance.runPython(`
 from pathlib import Path

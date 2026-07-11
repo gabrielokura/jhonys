@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from build_monthly_report_v2 import build_report_data, report_data_to_json
 from build_monthly_html_report import (
     analyze_balance,
     grouped_monthly_totals,
@@ -91,6 +92,19 @@ class PipelineTest(unittest.TestCase):
             self.assertIn("Movimentações Para Avaliação", report)
             self.assertIn("Nenhuma movimentação nova ou sem regra", report)
 
+            report_data = build_report_data(
+                xlsx_path,
+                rows,
+                grouped_monthly_totals(rows),
+                balance,
+            )
+            self.assertEqual(report_data["version"], 2)
+            self.assertEqual(report_data["metrics"]["transaction_count"], 2)
+            self.assertEqual(report_data["review"]["quantity"], 0)
+            self.assertEqual(report_data["balance"]["status"], "ok")
+            self.assertEqual(len(report_data["groups"]), 2)
+            self.assertIn("CREDITO REEMBOLSO ALUGUEL SIPAG", report_data_to_json(report_data))
+
 
 class PublicRulesTest(unittest.TestCase):
     rule_files = [
@@ -154,6 +168,8 @@ class StaticSiteTest(unittest.TestCase):
         root_index = (ROOT / "index.html").read_text(encoding="utf-8")
         docs_index = (ROOT / "docs/index.html").read_text(encoding="utf-8")
         app_js = (ROOT / "docs/app.js").read_text(encoding="utf-8")
+        report_v2_html = (ROOT / "docs/report-v2.html").read_text(encoding="utf-8")
+        report_v2_js = (ROOT / "docs/report-v2.js").read_text(encoding="utf-8")
 
         self.assertIn('url=docs/', root_index)
         self.assertIn('id="clear-button"', docs_index)
@@ -161,11 +177,18 @@ class StaticSiteTest(unittest.TestCase):
         self.assertIn('id="status-steps"', docs_index)
         self.assertIn("MAX_UPLOAD_BYTES", app_js)
         self.assertIn("setProcessingStep", app_js)
+        self.assertIn("Abrir relatório interativo", app_js)
+        self.assertIn("report-v2.html?dataKey=", app_js)
+        self.assertIn('id="groups"', report_v2_html)
+        self.assertIn("fetch(dataUrl)", report_v2_js)
+        self.assertIn("readStoredReport(dataKey)", report_v2_js)
+        self.assertIn("storage.removeItem(key)", report_v2_js)
 
         for file_name in [
             "ofx_to_csv.py",
             "classify_transactions.py",
             "build_monthly_html_report.py",
+            "build_monthly_report_v2.py",
         ]:
             self.assertEqual(
                 (ROOT / file_name).read_text(encoding="utf-8"),

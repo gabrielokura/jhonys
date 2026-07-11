@@ -19,6 +19,7 @@ Arraste o arquivo `.ofx` na pagina. O app gera:
 - CSV bruto;
 - Excel classificado;
 - HTML mensal agrupado;
+- relatório interativo v2;
 - CSV de pendencias, caso haja operacoes novas para avaliar.
 
 ## Acesso em rede local
@@ -64,6 +65,8 @@ Se o Pages estiver configurado para publicar a raiz da branch em vez do Actions,
 
 Importante: todo arquivo dentro de `docs/` fica publico no GitHub Pages. Antes de publicar, mantenha as regras de classificacao sem nomes de pessoas, CPF/CNPJ, chaves PIX, dados bancarios, emails ou telefones.
 
+O botão `Abrir relatório interativo` usa `report-v2.html`, `report-v2.css` e `report-v2.js` para renderizar o JSON produzido por `build_monthly_report_v2.py`. O botão `Abrir HTML clássico` mantém o relatório antigo funcionando.
+
 ## Regras de classificacao
 
 As regras ficam em:
@@ -86,4 +89,5 @@ CR COMPRAS VISA;SIPAG_Cred._Visa;Sim;Cartao;Credito SIPAG;;;
 - `ofx_to_csv.py`: extrai transacoes do OFX para CSV.
 - `classify_transactions.py`: classifica o extrato e gera Excel.
 - `build_monthly_html_report.py`: gera HTML mensal agrupado.
+- `build_monthly_report_v2.py`: gera o JSON usado pelo relatorio interativo.
 - `classification_rules_completed.csv`: base de regras.
