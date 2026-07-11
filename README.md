@@ -53,7 +53,12 @@ Abra:
 http://127.0.0.1:8000/
 ```
 
-Para publicar no GitHub Pages, configure o repositorio em `Settings > Pages` usando a branch `main` e a pasta `/docs`.
+Para publicar no GitHub Pages com GitHub Actions:
+
+1. Envie as alteracoes para a branch `main`.
+2. No GitHub, abra `Settings > Pages`.
+3. Em `Build and deployment`, selecione `GitHub Actions` como fonte.
+4. O workflow `Deploy GitHub Pages` publicara a pasta `docs/` automaticamente a cada push.
 
 ## Regras de classificacao
 

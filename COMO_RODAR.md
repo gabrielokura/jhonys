@@ -75,7 +75,12 @@ Abra:
 http://127.0.0.1:8000/
 ```
 
-No GitHub, publique em `Settings > Pages` selecionando a branch `main` e a pasta `/docs`.
+No GitHub, publique com Actions:
+
+1. Envie as alteracoes para a branch `main`.
+2. Abra `Settings > Pages`.
+3. Em `Build and deployment`, selecione `GitHub Actions` como fonte.
+4. O workflow `Deploy GitHub Pages` publicara a pasta `docs/` automaticamente a cada push.
 
 ## Modo manual: Etapa 1, converter OFX para CSV
 
