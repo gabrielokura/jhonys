@@ -1,0 +1,28 @@
+services:
+  firebird30:
+    image: jacobalberty/firebird:3.0
+    platform: linux/amd64
+    container_name: firebird30
+    ports:
+      - "3050:3050"
+    environment:
+      ISC_PASSWORD: ${FIREBIRD_PASSWORD:?Set FIREBIRD_PASSWORD in relatorios/.env}
+    volumes:
+      - ./data:/firebird/data
+
+  api:
+    build:
+      context: ./api
+    container_name: relatorios-api
+    depends_on:
+      firebird30:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    environment:
+      FIREBIRD_HOST: firebird30
+      FIREBIRD_PORT: "3050"
+      FIREBIRD_DATABASE: ${FIREBIRD_DATABASE:?Set FIREBIRD_DATABASE in relatorios/.env}
+      FIREBIRD_USER: ${FIREBIRD_USER:-SYSDBA}
+      FIREBIRD_PASSWORD: ${FIREBIRD_PASSWORD:?Set FIREBIRD_PASSWORD in relatorios/.env}
+      FIREBIRD_CHARSET: UTF8

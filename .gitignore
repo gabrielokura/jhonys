@@ -4,7 +4,10 @@
 *.xlsx
 *.html
 *.json
+*.fdb
+*.FDB
 web_runs/
+relatorios/data/
 
 # CSVs de regras fazem parte do processador
 !classification_rules.csv
@@ -25,6 +28,12 @@ Thumbs.db
 .DS_Store
 
 # Ambientes locais
+.env
+.env.*
+!.env.example
+relatorios/.env
+relatorios/.env.*
+!relatorios/.env.example
 .venv/
 venv/
 env/
