@@ -11,26 +11,36 @@
   <main class="app-shell">
     <section class="workbench" aria-labelledby="app-title">
       <div class="upload-pane">
-        <p class="eyebrow">GitHub Pages + Pyodide</p>
+        <p class="eyebrow">Processamento privado no navegador</p>
         <h1 id="app-title">Analisador OFX</h1>
-        <p class="lead">Converta um extrato OFX em CSV, Excel classificado e relatorio HTML mensal direto no navegador.</p>
+        <p class="lead">Converta um extrato OFX em CSV, Excel classificado e relatório mensal sem enviar o arquivo para servidor.</p>
 
-        <form id="ofx-form" class="dropzone">
+        <form id="ofx-form" class="dropzone" aria-describedby="upload-help">
           <input id="ofx-file" type="file" accept=".ofx,application/x-ofx,text/plain" required>
           <label for="ofx-file">
             <span class="drop-title">Solte o OFX aqui</span>
             <span id="file-label" class="drop-subtitle">ou selecione um arquivo</span>
+            <span id="upload-help" class="drop-help">Arquivo máximo: 20 MB. O processamento acontece somente nesta aba.</span>
           </label>
           <button id="process-button" type="submit" disabled>Processar</button>
         </form>
       </div>
 
-      <aside class="status-pane" aria-live="polite">
-        <div class="status-header">
-          <span id="status-dot" class="status-dot idle"></span>
-          <strong id="status-title">Aguardando arquivo</strong>
+      <aside class="status-pane">
+        <div class="status-region" role="status" aria-live="polite" aria-atomic="true">
+          <div class="status-header">
+            <span id="status-dot" class="status-dot idle"></span>
+            <strong id="status-title">Aguardando arquivo</strong>
+          </div>
+          <p id="status-message">Os arquivos bancários ficam no seu navegador durante o processamento.</p>
         </div>
-        <p id="status-message">Os arquivos bancarios ficam no seu navegador durante o processamento.</p>
+
+        <ol id="status-steps" class="status-steps" aria-label="Etapas do processamento" hidden>
+          <li data-step="runtime">Carregar Python no navegador</li>
+          <li data-step="modules">Preparar conversor e regras</li>
+          <li data-step="ofx">Ler e classificar OFX</li>
+          <li data-step="outputs">Gerar relatório e downloads</li>
+        </ol>
 
         <div id="summary" class="summary" hidden></div>
         <div id="downloads" class="downloads" hidden></div>

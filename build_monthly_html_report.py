@@ -484,6 +484,22 @@ def render_review_section(rows: list[dict[str, str]]) -> str:
         )
 
     total = sum((parse_amount(row.get("valor", "")) for row in rows_to_review), Decimal("0"))
+    inflows = sum(
+        (
+            amount
+            for amount in (parse_amount(row.get("valor", "")) for row in rows_to_review)
+            if amount > 0
+        ),
+        Decimal("0"),
+    )
+    outflows = sum(
+        (
+            amount
+            for amount in (parse_amount(row.get("valor", "")) for row in rows_to_review)
+            if amount < 0
+        ),
+        Decimal("0"),
+    )
     columns = [
         "data",
         "tipo",
@@ -498,7 +514,12 @@ def render_review_section(rows: list[dict[str, str]]) -> str:
     return (
         '<section class="review-section warning">'
         "<h2>Movimentações Para Avaliação</h2>"
-        f"<p>{len(rows_to_review)} linha(s) precisam ser avaliadas para futura incorporação nas regras. Total: {format_brl(total)}.</p>"
+        f"<p>{len(rows_to_review)} linha(s) precisam ser avaliadas para futura incorporação nas regras.</p>"
+        '<div class="review-metrics">'
+        f"<div><span>Entradas</span><strong class=\"positive\">{format_brl(inflows)}</strong></div>"
+        f"<div><span>Saídas</span><strong class=\"negative\">{format_brl(outflows)}</strong></div>"
+        f"<div><span>Saldo</span><strong class=\"{amount_class(total)}\">{format_brl(total)}</strong></div>"
+        "</div>"
         f"{render_detail_table(rows_to_review, columns)}"
         "</section>"
     )
@@ -520,11 +541,12 @@ def render_detail_table(rows: list[dict[str, str]], columns: list[str]) -> str:
     pagination = ""
     if len(rows) > DETAIL_ROWS_PER_PAGE:
         pages = (len(rows) + DETAIL_ROWS_PER_PAGE - 1) // DETAIL_ROWS_PER_PAGE
+        first_page_end = min(DETAIL_ROWS_PER_PAGE, len(rows))
         pagination = (
             '<div class="table-pagination">'
-            '<button type="button" class="pagination-prev">Anterior</button>'
-            f'<span class="pagination-status">Página 1 de {pages}</span>'
-            '<button type="button" class="pagination-next">Próxima</button>'
+            '<button type="button" class="pagination-prev" aria-label="Página anterior">Anterior</button>'
+            f'<span class="pagination-status" aria-live="polite">Mostrando 1-{first_page_end} de {len(rows)} · Página 1 de {pages}</span>'
+            '<button type="button" class="pagination-next" aria-label="Próxima página">Próxima</button>'
             "</div>"
         )
 
@@ -590,7 +612,7 @@ def render_group_section(
         f"<h2>{html.escape(group)}</h2>"
         f"<h3>{html.escape(category)}</h3>"
         "</div>"
-        f'<button class="toggle-details" type="button" data-target="{detail_id}">Ver mais</button>'
+        f'<button class="toggle-details" type="button" data-target="{detail_id}" aria-controls="{detail_id}" aria-expanded="false">Ver mais</button>'
         "</div>"
         "<table>"
         "<thead>"
@@ -635,7 +657,7 @@ def render_html_report(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; navigate-to 'none'">
-  <title>Relatorio Mensal por Grupo e Categoria</title>
+  <title>Relatório Mensal por Grupo e Categoria</title>
   <style>
     :root {{
       --bg: #f6f7f9;
@@ -737,6 +759,24 @@ def render_html_report(
     .review-section.ok {{
       border-color: #88bf9a;
     }}
+    .review-metrics {{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0 16px;
+    }}
+    .review-metrics div {{
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      background: #fbfcfe;
+    }}
+    .review-metrics span {{
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }}
     section {{
       background: var(--panel);
       border: 1px solid var(--line);
@@ -824,7 +864,8 @@ def render_html_report(
       background: #ffffff;
       color: #1f4e79;
       border-radius: 6px;
-      padding: 7px 10px;
+      min-height: 44px;
+      padding: 9px 12px;
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
@@ -850,6 +891,10 @@ def render_html_report(
       font-size: 12px;
       text-transform: uppercase;
     }}
+    button:focus-visible, a:focus-visible {{
+      outline: 3px solid rgba(36, 95, 158, 0.35);
+      outline-offset: 2px;
+    }}
     a {{ color: #245f9e; text-decoration: none; }}
     a:hover {{ text-decoration: underline; }}
     .number, .money {{ text-align: right; white-space: nowrap; }}
@@ -865,6 +910,7 @@ def render_html_report(
       main {{ width: min(100% - 20px, 1180px); }}
       .metric-row {{ grid-template-columns: 1fr; }}
       .balance-grid {{ grid-template-columns: 1fr; }}
+      .review-metrics {{ grid-template-columns: 1fr; }}
       .section-heading {{ flex-direction: column; }}
       .toggle-details {{ margin-top: 0; }}
       .table-pagination {{ justify-content: flex-start; flex-wrap: wrap; }}
@@ -899,9 +945,11 @@ def render_html_report(
         if (isHidden) {{
           target.removeAttribute('hidden');
           button.textContent = 'Ver menos';
+          button.setAttribute('aria-expanded', 'true');
         }} else {{
           target.setAttribute('hidden', '');
           button.textContent = 'Ver mais';
+          button.setAttribute('aria-expanded', 'false');
         }}
       }});
     }});
@@ -923,7 +971,7 @@ def render_html_report(
         rows.forEach((row, index) => {{
           row.hidden = index < start || index >= end;
         }});
-        status.textContent = `Página ${{currentPage}} de ${{totalPages}}`;
+        status.textContent = `Mostrando ${{start + 1}}-${{Math.min(end, rows.length)}} de ${{rows.length}} · Página ${{currentPage}} de ${{totalPages}}`;
         prev.disabled = currentPage === 1;
         next.disabled = currentPage === totalPages;
       }};

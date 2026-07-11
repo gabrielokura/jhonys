@@ -142,8 +142,10 @@ class StaticSiteTest(unittest.TestCase):
 
         paginated = render_detail_table(rows, ["data", "descricao", "valor"])
         self.assertIn('class="table-pagination"', paginated)
-        self.assertIn("Página 1 de 2", paginated)
+        self.assertIn("Mostrando 1-20 de 21 · Página 1 de 2", paginated)
         self.assertIn('data-page-size="20"', paginated)
+        self.assertIn('aria-label="Página anterior"', paginated)
+        self.assertIn('aria-label="Próxima página"', paginated)
 
         short_table = render_detail_table(rows[:20], ["data", "descricao", "valor"])
         self.assertNotIn('class="table-pagination"', short_table)
@@ -155,7 +157,10 @@ class StaticSiteTest(unittest.TestCase):
 
         self.assertIn('url=docs/', root_index)
         self.assertIn('id="clear-button"', docs_index)
+        self.assertIn('role="status"', docs_index)
+        self.assertIn('id="status-steps"', docs_index)
         self.assertIn("MAX_UPLOAD_BYTES", app_js)
+        self.assertIn("setProcessingStep", app_js)
 
         for file_name in [
             "ofx_to_csv.py",

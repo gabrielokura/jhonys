@@ -32,6 +32,13 @@ input {
   font: inherit;
 }
 
+button:focus-visible,
+.download-link:focus-visible,
+.dropzone:focus-within {
+  outline: 3px solid rgba(36, 107, 95, 0.34);
+  outline-offset: 3px;
+}
+
 .app-shell {
   width: min(1120px, calc(100% - 32px));
   margin: 32px auto;
@@ -100,6 +107,11 @@ h1 {
   border-color: var(--accent);
 }
 
+.dropzone:focus-within {
+  border-color: var(--accent);
+  background: #f3fbf8;
+}
+
 .dropzone input {
   position: absolute;
   inline-size: 1px;
@@ -129,12 +141,20 @@ h1 {
   overflow-wrap: anywhere;
 }
 
+.drop-help {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 button,
 .download-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 42px;
+  min-height: 44px;
   border: 1px solid var(--accent);
   border-radius: 6px;
   padding: 10px 14px;
@@ -158,6 +178,10 @@ button:disabled {
 
 .status-pane {
   background: #fcfcfd;
+}
+
+.status-region {
+  min-height: 104px;
 }
 
 .status-header {
@@ -191,6 +215,52 @@ button:disabled {
 #status-message {
   color: var(--muted);
   line-height: 1.5;
+}
+
+.status-steps {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.status-steps[hidden] {
+  display: none;
+}
+
+.status-steps li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.status-steps li::before {
+  content: "";
+  inline-size: 9px;
+  block-size: 9px;
+  border-radius: 50%;
+  border: 2px solid #b8c1cf;
+  background: white;
+}
+
+.status-steps li.active {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.status-steps li.active::before {
+  border-color: var(--warning);
+  background: var(--warning);
+  box-shadow: 0 0 0 4px rgba(173, 111, 18, 0.12);
+}
+
+.status-steps li.done::before {
+  border-color: var(--accent);
+  background: var(--accent);
 }
 
 .summary {
@@ -242,6 +312,11 @@ button:disabled {
   background: white;
   color: var(--blue);
   border-color: #9fb3c8;
+}
+
+.download-link.primary {
+  min-height: 50px;
+  font-size: 16px;
 }
 
 .download-link.secondary:hover {

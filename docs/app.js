@@ -19,6 +19,7 @@ const processButton = document.querySelector("#process-button");
 const statusDot = document.querySelector("#status-dot");
 const statusTitle = document.querySelector("#status-title");
 const statusMessage = document.querySelector("#status-message");
+const statusSteps = document.querySelector("#status-steps");
 const summary = document.querySelector("#summary");
 const downloads = document.querySelector("#downloads");
 const clearButton = document.querySelector("#clear-button");
@@ -27,10 +28,45 @@ let pyodideReadyPromise = null;
 let pyodideInstance = null;
 let objectUrls = [];
 
-function setStatus(kind, title, message) {
+const PROCESS_STEPS = ["runtime", "modules", "ofx", "outputs"];
+
+function setStatus(kind, title, message, step = null) {
   statusDot.className = `status-dot ${kind}`;
   statusTitle.textContent = title;
   statusMessage.textContent = message;
+  if (step) {
+    setProcessingStep(step);
+  }
+}
+
+function setBusy(isBusy) {
+  form.setAttribute("aria-busy", String(isBusy));
+  processButton.textContent = isBusy ? "Processando..." : "Processar";
+}
+
+function setProcessingStep(activeStep) {
+  const activeIndex = PROCESS_STEPS.indexOf(activeStep);
+  statusSteps.hidden = false;
+  statusSteps.querySelectorAll("li").forEach((item) => {
+    const stepIndex = PROCESS_STEPS.indexOf(item.dataset.step);
+    item.classList.toggle("done", stepIndex >= 0 && stepIndex < activeIndex);
+    item.classList.toggle("active", item.dataset.step === activeStep);
+  });
+}
+
+function finishProcessingSteps() {
+  statusSteps.hidden = false;
+  statusSteps.querySelectorAll("li").forEach((item) => {
+    item.classList.add("done");
+    item.classList.remove("active");
+  });
+}
+
+function resetProcessingSteps() {
+  statusSteps.hidden = true;
+  statusSteps.querySelectorAll("li").forEach((item) => {
+    item.classList.remove("active", "done");
+  });
 }
 
 function clearOutputs() {
@@ -43,6 +79,7 @@ function clearOutputs() {
   downloads.hidden = true;
   downloads.innerHTML = "";
   clearButton.hidden = true;
+  resetProcessingSteps();
 }
 
 function loadPyodideScript() {
@@ -71,12 +108,12 @@ async function fetchRequiredFile(path, asBinary = false) {
 async function preparePyodide() {
   if (!pyodideReadyPromise) {
     pyodideReadyPromise = (async () => {
-      setStatus("loading", "Carregando Python", "Baixando o runtime Pyodide. Na primeira vez, isso pode levar alguns segundos.");
+      setStatus("loading", "Carregando ambiente Python", "Baixando o runtime no navegador. Na primeira vez, isso pode levar alguns segundos.", "runtime");
       await loadPyodideScript();
       const pyodide = await globalThis.loadPyodide({ indexURL: PYODIDE_INDEX_URL });
       pyodideInstance = pyodide;
 
-      setStatus("loading", "Preparando conversor", "Montando os modulos Python e as regras de classificacao no navegador.");
+      setStatus("loading", "Preparando conversor", "Montando os módulos Python e as regras de classificação no navegador.", "modules");
       pyodide.FS.mkdirTree("/work/python");
       pyodide.FS.mkdirTree("/work/runs");
 
@@ -200,28 +237,28 @@ function renderMetric(label, value) {
 function renderDownloads(pyodide, result) {
   const outputs = [
     {
-      label: "Relatorio HTML",
+      label: "Abrir relatório",
       filePath: result.html,
       type: "text/html;charset=utf-8",
       secondary: false,
       openInNewTab: true,
     },
     {
-      label: "Excel classificado",
+      label: "Baixar Excel",
       filePath: result.xlsx,
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       secondary: true,
       openInNewTab: false,
     },
     {
-      label: "CSV bruto",
+      label: "Baixar CSV bruto",
       filePath: result.csv,
       type: "text/csv;charset=utf-8",
       secondary: true,
       openInNewTab: false,
     },
     {
-      label: "CSV pendencias",
+      label: "Baixar pendências",
       filePath: result.pending,
       type: "text/csv;charset=utf-8",
       secondary: true,
@@ -233,7 +270,7 @@ function renderDownloads(pyodide, result) {
     .map(({ label, filePath, type, secondary, openInNewTab }) => {
       const bytes = pyodide.FS.readFile(filePath);
       const url = blobUrl(bytes, type);
-      const className = secondary ? "download-link secondary" : "download-link";
+      const className = secondary ? "download-link secondary" : "download-link primary";
       if (openInNewTab) {
         return `<a class="${className}" href="${url}" target="_blank" rel="noopener">${label}</a>`;
       }
@@ -268,9 +305,9 @@ run_root.mkdir(parents=True, exist_ok=True)
 
 function renderSummary(result) {
   summary.innerHTML = [
-    renderMetric("Transacoes", result.transaction_count),
+    renderMetric("Transações", result.transaction_count),
     renderMetric("Classificadas", `${result.classified_count} / ${result.classified_total}`),
-    renderMetric("Pendencias", result.pending_count),
+    renderMetric("Pendências", result.pending_count),
     renderMetric("Regras", result.rule_count),
     renderMetric("Tabelas", result.table_count),
     renderMetric("Saldo", result.balance_status),
@@ -278,23 +315,36 @@ function renderSummary(result) {
   summary.hidden = false;
 }
 
+function isValidOfxFile(file) {
+  return file.name.toLowerCase().endsWith(".ofx");
+}
+
 async function processFile(file) {
+  if (!isValidOfxFile(file)) {
+    setStatus("error", "Arquivo inválido", "Selecione um arquivo com extensão .ofx.");
+    return;
+  }
+
   if (file.size > MAX_UPLOAD_BYTES) {
-    setStatus("error", "Arquivo muito grande", "Envie um arquivo OFX de ate 20 MB.");
+    setStatus("error", "Arquivo muito grande", "Envie um arquivo OFX de até 20 MB.");
     return;
   }
 
   clearOutputs();
-  setStatus("loading", "Processando", "Lendo o OFX e preparando os arquivos de saida.");
+  setStatus("loading", "Preparando processamento", "Validando o arquivo e preparando o ambiente.", "runtime");
   processButton.disabled = true;
+  fileInput.disabled = true;
+  setBusy(true);
 
   try {
     const pyodide = await preparePyodide();
+    setStatus("loading", "Lendo e classificando OFX", "Extraindo transações, aplicando regras e conferindo saldo.", "ofx");
     const bytes = new Uint8Array(await file.arrayBuffer());
     pyodide.FS.writeFile("/work/upload.ofx", bytes);
     pyodide.globals.set("browser_original_name", file.name);
 
     const pyResult = pyodide.runPython("process_browser_file(browser_original_name)");
+    setStatus("loading", "Gerando saídas", "Preparando relatório, Excel e CSVs para uso.", "outputs");
     const result = pyResult.toJs({ dict_converter: Object.fromEntries });
     pyResult.destroy();
 
@@ -302,13 +352,16 @@ async function processFile(file) {
     renderDownloads(pyodide, result);
 
     const message = result.transaction_count === 0
-      ? "Nenhuma transacao STMTTRN foi encontrada, mas os arquivos foram gerados para conferencia."
+      ? "Nenhuma transação STMTTRN foi encontrada, mas os arquivos foram gerados para conferência."
       : `Arquivo processado: ${result.original_name}.`;
+    finishProcessingSteps();
     setStatus("success", "Arquivos prontos", message);
   } catch (error) {
     console.error(error);
     setStatus("error", "Falha no processamento", error.message || String(error));
   } finally {
+    fileInput.disabled = false;
+    setBusy(false);
     processButton.disabled = !fileInput.files.length;
   }
 }
@@ -317,13 +370,18 @@ fileInput.addEventListener("change", () => {
   clearOutputs();
   const file = fileInput.files[0];
   fileLabel.textContent = file ? file.name : "ou selecione um arquivo";
+  if (file && !isValidOfxFile(file)) {
+    processButton.disabled = true;
+    setStatus("error", "Arquivo inválido", "Selecione um arquivo com extensão .ofx.");
+    return;
+  }
   if (file && file.size > MAX_UPLOAD_BYTES) {
     processButton.disabled = true;
-    setStatus("error", "Arquivo muito grande", "Envie um arquivo OFX de ate 20 MB.");
+    setStatus("error", "Arquivo muito grande", "Envie um arquivo OFX de até 20 MB.");
     return;
   }
   processButton.disabled = !file;
-  setStatus("idle", file ? "Arquivo selecionado" : "Aguardando arquivo", file ? "Pronto para processar." : "Os arquivos bancarios ficam no seu navegador durante o processamento.");
+  setStatus("idle", file ? "Arquivo selecionado" : "Aguardando arquivo", file ? "Pronto para processar." : "Os arquivos bancários ficam no seu navegador durante o processamento.");
 });
 
 for (const eventName of ["dragenter", "dragover"]) {
@@ -343,6 +401,10 @@ for (const eventName of ["dragleave", "drop"]) {
 form.addEventListener("drop", (event) => {
   const file = event.dataTransfer.files[0];
   if (!file) {
+    return;
+  }
+  if (event.dataTransfer.files.length > 1) {
+    setStatus("error", "Envie um arquivo por vez", "Solte apenas um arquivo OFX para evitar confusão nos resultados.");
     return;
   }
   fileInput.files = event.dataTransfer.files;
